@@ -1,5 +1,5 @@
 # Music-LED-Sync
-Project aimed at syncing audio to an LED bank that changes color depending on TBD conditions
+Project aimed at syncing audio to an LED bank that changes color to music written in C using the Arduino ATmega 2560
 
 Breaking it up into the following smaller Milestones:
 
