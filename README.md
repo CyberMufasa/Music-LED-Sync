@@ -8,3 +8,7 @@ Breaking it up into the following smaller Milestones:
 3. - [ ] Look into amplifier design to boost the audio signals
 4. - [ ] Add an LCD display to indicate the different modes like: color cycle, solid colors etc.
 5. - [ ] Work on chassis design, or create the apparatus where it can be fitted to a guitar pedal 
+
+# Additional Features
+1. Bass boost mode by using a bass boosted amplifier (possibly a preamp for impedance matching the input)
+2. Incorporate machine learning possibly to know what frequencies are present when a lot of DC noise might be present on a poor signal
