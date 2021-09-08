@@ -1,0 +1,133 @@
+/*
+ * Audio_LED_Strip.c
+ *
+ * Created: 9/1/2021 3:04:03 PM
+ * Author : Xh0kat
+ RGB LED test to find the range of values for the RGB led provided.
+ */ 
+
+// System includes
+#include <stdlib.h>
+#include <avr/io.h>
+#include <avr/interrupt.h> // header for interrupts
+#include <util/delay.h>
+
+// Prototypes
+void cycle_led( void );
+void PWMsetup();
+void PWMsetup2();
+void ADCsetup();
+
+// Variables
+double dutyCycle = 0;
+
+
+int main(int argc, char *argv[])
+{ 
+	// Hardware Setup
+	PWMsetup();
+	uint8_t ADCValue =85;
+	//DDRL = 0b11111111; // Sets all pins on Port L to output 
+	//Set PORTB as outputs (they are PWM ports)
+	DDRB = 0xFF;
+	// Set PORTD pins as input to read analog signal in
+	DDRD = 0b11110000; // Sets all pins on Port D connected to sensors as inputs
+	PORTD = 0b00000000; // Initialize Port D pins to 0
+	
+	// set LEDS as outputs
+	DDRC = 0b11111111;
+	PORTC = 0b11111111;  
+	
+	//PWMsetup();
+	sei(); // enable all interrupts
+	
+	ADCsetup(); // Setup ADC
+	
+	while(1)
+	{
+		// Start an ADC conversion by setting ADSC bit (bit 6)
+		ADCSRA = ADCSRA | (1 << ADSC);
+	
+		// Wait until the ADSC bit has been cleared
+		//while(ADCSRA & (1 << ADSC));
+		if(ADCH > ADCValue){
+	PORTC = 0b11111111;
+			_delay_ms(3000);
+		}
+		else
+		{
+			PORTC = 0b00000000;
+	_delay_ms(3000);
+		}
+	}
+	return (0); 
+}
+
+// set RGB led to red color
+void led_red( void )
+{
+	PORTL = 0b11111111;	
+}
+
+// set RGB led to red color
+void cycle_led( void )
+{
+	PORTL = 0x01;
+}
+
+// PWM setup taken from Mechatronics project (0 timer register)
+void PWMsetup()
+{
+	// Step 1: Set Timer 0 to fast PWM
+	// Step 3: Clear OC0A on Compare Match, set OC0A at BOTTOM (non-inverting mode)
+	//TCCR0A |= _BV(WGM01) | _BV(WGM00) | _BV(COM0A1);
+	TCCR1A  = (1<<WGM11);
+//	TCCR1B  = (1<<WGM12) | (1<<WGM13);
+	//TCCR1B |= (1<<CS11);  //prescale 8, step = 1 us
+	//TCCR1B  = (1<<WGM12) | (1<<WGM13);
+	TCCR1B |= (1<<CS11); 
+	TCCR1A |= (1<<COM1A1) | (1<<COM1B1) | (1<<COM1C1); 
+	// Step 2: Enable the output compare match A interrupt 
+	TIMSK0 |= _BV(OCIE0A);
+	
+	// Step 5: Value that the output compare resets PWM signal at
+
+	// Step 4: Set clock pre-scaler to 1/64 to ensure PWM will run at ~488 Hz
+	TCCR0B |= _BV(CS01) | _BV(CS00);
+		OCR1C = (dutyCycle/100)*255;
+	OCR1B = (dutyCycle/100)*255;
+}
+
+// Enable ADC pin
+void ADCsetup()
+{
+	//ADCSRA |= _BV(ADEN); // enable ADC
+	//ADCSRA |= _BV(ADIE); // enable interrupt of ADC
+	//ADMUX |= _BV(ADLAR) |_BV(REFS0) | _BV(MUX0); // Select AVCC as voltage reference, set ADC data register to left adjust result, and select analog channel 1
+	
+	//using online code with port 5
+	 ADCSRA |= (0 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Set ADC prescalar to 8 - // 125KHz sample rate 1MHz
+
+	 ADMUX |= (1 << REFS0); // Set ADC reference to AVCC
+
+	 ADMUX |= (1 << ADLAR); // Left adjust ADC result to allow easy 8 bit reading
+
+	 ADMUX&=0xF0;
+
+	 ADMUX|=5; // MUX values needed to be changed to use ADC0
+
+	 //ADCSRA |= (1 << ADFR); // Set ADC to Free-Running Mode
+
+	 ADCSRA |= (1 << ADEN); // Enable ADC
+
+	 ADCSRA |= (1 << ADSC); // Start A2D Conversions while(1) // Loop Forever
+	
+}
+
+// Resets the timer 0 interrupt that runs PWM. Keeps timer 1 and timer 0 running properly
+ISR(TIMER0_COMPA_vect)
+{
+OCR1C = (dutyCycle/100)*255;
+OCR1B = (dutyCycle/100)*255;
+}
+
