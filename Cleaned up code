@@ -6,10 +6,13 @@
  RGB LED test to find the range of values for the RGB led provided.
  */ 
 
+// System Defines
+#define F_CPU 20000000
+
 // System includes
 #include <stdlib.h>
 #include <avr/io.h>
-#include <avr/interrupt.h> // header for interrupts
+#include <avr/interrupt.h> 
 #include <util/delay.h>
 
 // Prototypes
@@ -27,13 +30,14 @@ int main(int argc, char *argv[])
 	uint8_t ADCValue =20;
 	float voltage= ADCH * (5.0 / 1023.0);
 
+	
 	//Set PORTB as outputs (they are PWM ports)
 	DDRB = 0xFF;
 	
 	// Set PORTD pins as input to read analog signal in
 	DDRD = 0b11110000; // Sets all pins on Port D connected to sensors as inputs
 	PORTD = 0b00000000; // Initialize Port D pins to 0
-	
+	DDRF = 0b11111101;
 	// set LEDS as outputs
 	DDRC = 0b11111111;
 	PORTC = 0b11111111;  
@@ -41,23 +45,25 @@ int main(int argc, char *argv[])
 	ADCsetup(); // Setup ADC
 	
 	sei(); // enable all interrupts
-		
+	// not needed as it is defined in ADCsetup()
+		TCCR0B |= _BV(CS01) | _BV(CS00);
 	while(1)
 	{
-		// Start an ADC conversion by setting ADSC bit (bit 6)
-		ADCSRA = ADCSRA | (1 << ADSC);
 	
-		if(170 < voltage){
-	PORTC = 0b11111111;
-			_delay_ms(3000);
-		}
-		else
-		{
-			PORTC = 0b00000000;
-	_delay_ms(3000);
-		}
+	//startADCConversion();
+	//
+		//if(170 < voltage)
+		//{
+			//PORTC = 0b11111111;
+			//_delay_ms(3000);
+		//}
+	//else
+		//{
+			//PORTC = 0b00000000;
+			//_delay_ms(3000);
+		//}
 	}
-	return (0); 
+	//return (0); 
 }
 
 // PWM setup taken from Mechatronics project (0 timer register)
@@ -79,10 +85,10 @@ void PWMsetup()
 	//OC0A = 
 	
 	// sei() should be set after, should set it in the main loop
-	sei();
+	//sei();
 	
 	// Set clock source to 1/64
-	TCCR0B |= _BV(CS01) | _BV(CS00);
+	//TCCR0B |= _BV(CS01) | _BV(CS00);
 }
 
 // Enable ADC pin
@@ -90,7 +96,7 @@ void ADCsetup()
 {
 
 	// Use reference voltage AVCC
-	ADMUX |= _BV(REFS0);
+	ADMUX |= _BV(REFS0)| _BV(MUX0);;
 	
 	// Set pin0 to use as ADC read pin
 	// Set to 0 so no need to do anything here
@@ -100,12 +106,13 @@ void ADCsetup()
 	
 	// Set up clock division with prescaler set to 128
 	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);
+	startADCConversion();
 }
 
 // Start ADC
 void startADCConversion()
 {
-	ADCSRA |= _BC(ADSC);
+	ADCSRA |= _BV(ADSC);
 }
 
 // 
@@ -117,11 +124,12 @@ ISR(TIMER0_COMPA_vect)
 // ISR for the PWM
 ISR(TIMER0_OVF_vect)
 {
-	
+	OCR0A = dutyCycle;
 }
 
 // ISR for the ADC
 ISR(ADC_vect)
 {
-	
+	dutyCycle = ADC;
+	startADCConversion();
 }
