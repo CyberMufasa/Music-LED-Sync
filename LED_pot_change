@@ -1,0 +1,146 @@
+/*
+ * Audio_LED_Strip.c
+ *
+ * Created: 9/1/2021 3:04:03 PM
+ * Author : Xh0kat
+ RGB LED test to find the range of values for the RGB led provided.
+ */ 
+
+// System Defines
+#define F_CPU 20000000
+
+// System includes
+#include <stdlib.h>
+#include <avr/io.h>
+#include <avr/interrupt.h> 
+#include <util/delay.h>
+
+// Prototypes
+void PWMsetup();
+void ADCsetup();
+void startADCConversion();
+
+// Variables
+double dutyCycle = 0;
+int ADC_val = 0;
+
+int main(int argc, char *argv[])
+{ 
+	// Hardware Setup
+	//PWMsetup();
+	//uint8_t ADCValue =20;
+	float voltage = ADCH * (5.0 / 1023.0);
+	
+	//Set PORTB as outputs (they are PWM ports)
+	DDRB = 0xFF;
+	
+	// Set PORTD pins as input to read analog signal in
+	DDRD = 0b11110000; // Sets all pins on Port D connected to sensors as inputs
+	PORTD = 0b00000000; // Initialize Port D pins to 0
+	DDRF = 0b11111101;
+	
+	// set LEDS as outputs
+	DDRC = 0b11111111;
+	//PORTC = 0b11111111;  
+	
+	ADCsetup(); // Setup ADC
+	
+	sei(); // enable all interrupts
+	
+	// Set clock source to 1/64 (required after external interrupts enabled)
+	TCCR0B |= _BV(CS01) | _BV(CS00);
+	
+	while(1)
+	{
+	
+		if (100 > ADC_val)
+		{
+			PORTC = 0b10000000;
+		
+		}
+		else if (200 > ADC_val)
+		{
+			PORTC = 0b01000000;
+			
+		}
+		else if (300 > ADC_val)
+		{
+			PORTC = 0b00100000;
+			
+		}
+		else if (400 > ADC_val)
+		{
+			PORTC = 0b00010000;
+			
+		}
+		else //if (500 > ADC_val)
+		{
+			PORTC = 0b00001000;
+			
+		}
+
+	}
+	//return (0); 
+}
+
+// PWM setup taken from Mechatronics project (0 timer register)
+void PWMsetup()
+{
+	// Optional, set up output port
+	
+	// Using OC0A pin
+	// Setup fast PWM mode
+	TCCR0A |= _BV(WGM01) | _BV(WGM00);
+	
+	// Clear on compare match
+	TCCR0A |= _BV(COM0A1); 
+	
+	// Set interrupt to match on overflow
+	TIMSK0 |= _BV(TOIE0);
+	
+}
+
+// Enable ADC pin
+void ADCsetup()
+{
+
+	// Use reference voltage AVCC
+	ADMUX |= _BV(REFS0)| _BV(MUX0);;
+	
+	// Set pin0 to use as ADC read pin
+	// Set to 0 so no need to do anything here
+	
+	// Enable ADC and set up interrupt flag to trigger when a conversion is complete
+	ADCSRA |= _BV(ADEN) | _BV(ADIE);
+	
+	// Set up clock division with prescaler set to 128
+	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);
+	
+	// Initiate ADC conversions
+	startADCConversion();
+}
+
+// Start ADC
+void startADCConversion()
+{
+	ADCSRA |= _BV(ADSC);
+}
+
+// 
+ISR(TIMER0_COMPA_vect)
+{
+
+}
+
+//// ISR for the PWM
+//ISR(TIMER0_OVF_vect)
+//{
+	//OCR0A = dutyCycle;
+//}
+
+// ISR for the ADC
+ISR(ADC_vect)
+{
+	ADC_val = ADC;
+	startADCConversion();
+}
