@@ -61,47 +61,61 @@ int main(int argc, char *argv[])
 	//Simple string printing
 	LCDWriteString("POT Val ");
 	
+	// Adjust POT to see if the correct LEDS turn on
 	while(1)
 	{
-		
 		LCDWriteIntXY(0,1,ADC_val,4);
-		
+		PORTC = 0b00000000;
 	
 		if (100 > ADC_val)
 		{
-			LCDWriteStringXY(9,0, "100 " );
-			PORTC = 0b10000000;
-		
+			LCDWriteStringXY(0,0, "Loop: 100 " );
+			PORTC = 0b00000001;		
 		}
 		else if (200 > ADC_val)
 		{
-			LCDWriteStringXY(9,0, "200 " );
-			PORTC = 0b01000000;
-			
+			LCDWriteStringXY(0,0, "Loop: 200 " );
+			PORTC = 0b00000010;			
 		}
 		else if (300 > ADC_val)
 		{
-			LCDWriteString("300 ");
-			LCDWriteStringXY(9,0, "300 " );
-			PORTC = 0b00100000;
-			
+			LCDWriteStringXY(0,0, "Loop: 300 " );
+			PORTC = 0b00000100;			
 		}
 		else if (400 > ADC_val)
 		{
-			LCDWriteStringXY(9,0, "400 " );
-			PORTC = 0b00010000;
+			LCDWriteStringXY(0,0, "Loop: 400 " );
+			PORTC = 0b00001000;			
+		}
+		else if (500 > ADC_val)
+		{
+			LCDWriteStringXY(0,0, "Loop: 500 " );
+			PORTC = 0b00010000;	
+		}
+		else if (600 > ADC_val)
+		{
+			LCDWriteStringXY(0,0, "Loop: 600 " );
+			PORTC = 0b00001000;
+		}
+		else if (700 > ADC_val)
+		{
+			LCDWriteStringXY(0,0, "Loop: 700 " );
+			PORTC = 0b00000100;
 			
 		}
-		else //if (500 > ADC_val)
+		else if (800 > ADC_val)
 		{
-			LCDWriteStringXY(9,0, "else" );
-			PORTC = 0b00001000;
-			
+			LCDWriteStringXY(0,0, "Loop: 800 " );
+			PORTC = 0b00000010;			
+		}
+		else 
+		{
+			LCDWriteStringXY(0,0, "over 800 " );
+			PORTC = 0b00011111;			
 		}
 		_delay_ms(1000);
-		//LCDClear();
 	}
-	//return (0); 
+
 }
 
 // PWM setup taken from Mechatronics project (0 timer register)
