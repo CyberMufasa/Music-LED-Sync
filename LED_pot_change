@@ -14,11 +14,13 @@
 #include <avr/io.h>
 #include <avr/interrupt.h> 
 #include <util/delay.h>
+#include "lcd.h" // header for LCD functions
 
 // Prototypes
 void PWMsetup();
 void ADCsetup();
 void startADCConversion();
+
 
 // Variables
 double dutyCycle = 0;
@@ -50,35 +52,54 @@ int main(int argc, char *argv[])
 	// Set clock source to 1/64 (required after external interrupts enabled)
 	TCCR0B |= _BV(CS01) | _BV(CS00);
 	
+	//Initialize LCD module
+	InitLCD(LS_BLINK|LS_ULINE);
+
+	//Clear the screen
+	LCDClear();
+
+	//Simple string printing
+	LCDWriteString("POT Val ");
+	
 	while(1)
 	{
+		
+		LCDWriteIntXY(0,1,ADC_val,4);
+		
 	
 		if (100 > ADC_val)
 		{
+			LCDWriteStringXY(9,0, "100 " );
 			PORTC = 0b10000000;
 		
 		}
 		else if (200 > ADC_val)
 		{
+			LCDWriteStringXY(9,0, "200 " );
 			PORTC = 0b01000000;
 			
 		}
 		else if (300 > ADC_val)
 		{
+			LCDWriteString("300 ");
+			LCDWriteStringXY(9,0, "300 " );
 			PORTC = 0b00100000;
 			
 		}
 		else if (400 > ADC_val)
 		{
+			LCDWriteStringXY(9,0, "400 " );
 			PORTC = 0b00010000;
 			
 		}
 		else //if (500 > ADC_val)
 		{
+			LCDWriteStringXY(9,0, "else" );
 			PORTC = 0b00001000;
 			
 		}
-
+		_delay_ms(1000);
+		//LCDClear();
 	}
 	//return (0); 
 }
