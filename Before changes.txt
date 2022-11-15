@@ -1,0 +1,107 @@
+#define F_CPU 20000000UL
+#define __AVR_ATmega2560__
+#ifndef __AVR_ATmega2560__
+void mTimer();
+#endif
+#include <stdio.h>
+#include <stdlib.h> // the header of the general-purpose standard library of C programming language
+#include <avr/io.h> // the header of the I/O port library
+
+#include <util/delay_basic.h> // header of the delay functions
+#include <util/delay.h>
+#include "lcd_test.h"
+#include "lcd_test.c"
+#include "lcd.h"
+#include "LCD.c"
+
+#include <avr/interrupt.h> // header for interrupts
+
+volatile unsigned int ADC_result;
+volatile unsigned int ADC_result_flag;
+
+void mTimer (int count)
+{
+   /***
+      Setup Timer1 as a ms timer
+	  Using polling method not Interrupt Driven
+   ***/
+   sei();
+   int i;
+
+   i = 0;
+
+   TCCR1B |= _BV (CS11);  // Set prescaler (/8) clock 16MHz/8 -> 2MHz
+   /* Set the Waveform gen. mode bit description to clear
+     on compare mode only */
+   TCCR1B |= _BV(WGM12);
+
+   /* Set output compare register for 2000 cycles, 1ms */
+   OCR1A = 0x07D0;
+ 
+   /* Initialize Timer1 to zero */
+   TCNT1 = 0x0000;
+
+   /* Enable the output compare interrupt */
+   //TIMSK1 |= _BV(OCIE1A);  //remove if global interrups is set (sei())
+
+   /* Clear the Timer1 interrupt flag and begin timing */
+   TIFR1 |= _BV(OCF1A);
+
+   /* Poll the timer to determine when the timer has reached 1ms */
+   while (i < count)
+   {
+      while ((TIFR1 & 0x02) != 0x02);
+	
+	   /* Clear the interrupt flag by WRITING a ONE to the bit */
+	   TIFR1 |= _BV(OCF1A);
+	   i++;
+   } /* while */
+   TCCR1B &= ~_BV (CS11);  //  disable prescalar, no Clock
+   return;
+}  /* mTimer */
+
+
+
+int main(int argc, char *argv[])
+{ 
+    test_LCD();
+    //mTimer(500);
+
+   cli();
+   ADCSRA |= _BV(ADEN); // enable ADC 
+   ADCSRA |= _BV(ADIE); // enable interrupt of ADC 
+   ADMUX |= _BV(ADLAR) | _BV(REFS0);
+
+   sei();
+   ADCSRA |= _BV(ADSC);
+
+    while (1)
+    {
+       //LCDClear();
+      //LCDWriteString("Flag not set");
+      if (ADC_result_flag)
+      {
+         //test_LCD();
+         LCDClear();
+         //LCDWriteString("ADC Setting");
+         LCDWriteInt(ADC_result,5);
+         ADC_result_flag = 0x00;
+         mTimer(1000);
+         // swap channels for sampling
+         ADMUX |= ~MUX1;
+         ADCSRA |= _BV(ADSC);
+         //printf("Main loop");
+         //printf("%d", ADC_result);
+      }
+
+    }
+    return (0); // This line returns a 0 value to the calling program 
+    //sei();
+// generally means no error was returned 
+}
+
+ISR(ADC_vect)
+{
+   ADC_result = ADCH;
+   ADC_result_flag = 1;
+}

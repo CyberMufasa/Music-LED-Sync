@@ -1,0 +1,50 @@
+{
+    "configurations": [
+        {
+            "name": "AVR",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "F:/Atmel Studio/7.0/toolchain/avr8/avr8-gnu-toolchain/avr/include/**",
+                "F:/Atmel Studio/7.0/toolchain/avr8/avr8-gnu-toolchain/avr/include/avr/**",
+                "F:\\Visual Studio Code\\AVR Projects\\Test Project 1 - Working Settings with AVR"
+            ],
+            "defines": [
+                "__ATmega2560__",
+                "__AVR_ATmega2560__"
+            ],
+            "cStandard": "c99",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "F:/Atmel Studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/avr-gcc.exe",
+            "compilerArgs": [
+                "-mmcu=atmega2560"
+            ],
+            "configurationProvider": "ms-vscode.makefile-tools"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "F:\\Visual Studio Code\\AVR Projects\\Test Project 1 - Working Settings with AVR",
+                "F:/Atmel Studio/7.0/toolchain/avr8/avr8-gnu-toolchain/avr/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}

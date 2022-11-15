@@ -1,0 +1,71 @@
+#Main application file name
+MAIN_APP = test
+MCU = atmega2560
+
+
+#Main hex file path in windows format 
+MAIN_HEX_PATH = "F:\Visual Studio Code\AVR Projects\Test Project 1 - Working Settings with AVR\$(MAIN_APP).hex"
+
+# Compiler and other Section 
+CC = avr-gcc
+OBJCOPY = avr-objcopy.exe
+AVRDUDE := "F:\Atmel Studio\AVR_dude\avrdude.exe" avrdude -C "F:\Atmel Studio\AVR_dude\avrdude.conf"
+
+#Options for avr-gcc
+CFLAGS = -g -Os -o
+
+#Linking options for avr-gcc 
+LFLAGS = -Os -mmcu=atmega2560 -o
+
+# Add target processor to flags.
+# ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS)
+# ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp
+
+
+
+#Options for HEX file generation 
+HFLAGS = -j .text -j .data -O ihex
+
+#Options for avrdude to burn the hex file
+
+#MMCU model here according to avrdude options
+DUDEFLAGS = -c
+DUDEFLAGS += wiring
+DUDEFLAGS += -p
+DUDEFLAGS += m2560
+DUDEFLAGS += -P 
+DUDEFLAGS += COM4
+DUDEFLAGS += -D
+DUDEFLAGS += -b
+DUDEFLAGS += 115200
+DUDEFLAGS += -U flash:w:$(MAIN_HEX_PATH):i
+
+# # Assemble: create object files from assembler source files.
+# .S.o:
+# 	$(CC) -c $(ALL_ASFLAGS) $< -o $@
+
+# Sources files needed for building the application
+SRC = $(MAIN_APP).c
+SRC += LCD.c
+SRC += lcd_test.c
+SRC += ffft.S
+
+# The headers files needed for building the application
+INCLUDE = -I.
+INCLUDE += lcd.h
+INCLUDE += lcd_test.h
+INCLUDE += ffft.h
+
+
+# commands Section Burn :
+Burn : Build
+	$(AVRDUDE) $(DUDEFLAGS)
+
+Build : $(MAIN_APP).elf
+	$(OBJCOPY) $(HFLAGS) $< $(MAIN_APP).hex
+
+$(MAIN_APP).elf: $(MAIN_APP).o
+	$(CC) $(SRC) $(INCLUDE) $(LFLAGS) $@
+
+$(MAIN_APP).o:$(SRC)
+	$(CC) $^ $(INCLUDE) $(CFLAGS) $@

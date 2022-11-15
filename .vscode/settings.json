@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "delay_basic.h": "c",
+        "io.h": "c",
+        "sfr_defs.h": "c",
+        "stdlib.h": "c",
+        "delay.h": "c",
+        "stdio.h": "c",
+        "pgmspace.h": "c"
+    }
+}

@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"path": "F:\\Visual Studio Code\\AVR Projects\\Test Project 1 - Working Settings with AVR"
+		},
+		{
+			"path": "F:\\Atmel Studio\\AVR_dude"
+		},
+		{
+			"path": "../../../University Courses/Uvic/MECH 458 - Mechatronics/Labs/LCD_PortC_2560/LCD_PortC/Debug"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"delay_basic.h": "c",
+			"io.h": "c",
+			"sfr_defs.h": "c",
+			"stdlib.h": "c",
+			"delay.h": "c",
+			"stdio.h": "c",
+			"lcd.h": "c",
+			"myutils.h": "c",
+			"ffft.h": "c",
+			"*.s": "c",
+			"lcd_test.h": "c",
+			"interrupt.h": "c",
+			"inttypes.h": "c"
+		}
+	}
+}

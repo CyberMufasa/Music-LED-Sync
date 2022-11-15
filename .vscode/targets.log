@@ -1,0 +1,302 @@
+make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make.exe: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.1
+# Built for Windows32
+# Copyright (C) 1988-2014 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Mon Jul 18 21:24:32 2022
+
+# Variables
+
+# 'override' directive
+GNUMAKEFLAGS := 
+# automatic
+<D = $(patsubst %/,%,$(patsubst %\,%,$(dir $<)))
+# automatic
+?F = $(notdir $?)
+# default
+.SHELLFLAGS := -c
+# environment
+CARBON_MEM_DISABLE = 1
+# makefile (from 'Makefile', line 37)
+SRC = $(MAIN_APP).c 
+# makefile
+MAKEFLAGS = pqrR
+# automatic
+?D = $(patsubst %/,%,$(patsubst %\,%,$(dir $?)))
+# makefile (from 'Makefile', line 2)
+MAIN_APP = test
+# automatic
+@D = $(patsubst %/,%,$(patsubst %\,%,$(dir $@)))
+# environment
+HOMEDRIVE = C:
+# automatic
+@F = $(notdir $@)
+# automatic
+^D = $(patsubst %/,%,$(patsubst %\,%,$(dir $^)))
+# makefile
+CURDIR := f:/Visual Studio Code/AVR Projects/Test Project 1
+# default
+SHELL := sh.exe
+# environment
+WINDIR = C:\WINDOWS
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# makefile (from 'Makefile', line 13)
+CFLAGS = -g -Os -o
+# environment
+ONEDRIVE = C:\Users\Xh0kat\OneDrive
+# environment
+PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# environment
+TMP = C:\Users\Xh0kat\AppData\Local\Temp
+# environment
+PROGRAMW6432 = C:\Program Files
+# environment
+PROGRAMDATA = C:\ProgramData
+# environment
+VSCODE_CWD = F:\Visual Studio Code\Microsoft VS Code
+# makefile (from 'Makefile', line 5)
+MAIN_HEX_PATH = "F:\Visual Studio Code\AVR Projects\Test Project 1\$(MAIN_APP).hex"
+# default
+MAKE_HOST := Windows32
+# environment
+PATH = C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;D:\Matlab\runtime\win64;D:\Matlab\bin;C:\Program Files (x86)\Calibre2\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;F:\Android Installer\ADB and Fastboot++;C:\Program Files\dotnet\;C:\Program Files (x86)\dotnet\;F:\Atmel Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin;F:\Atmel Studio\7.0\shellutils;F:\Visual Studio Code\C Compiler\MinGW64\bin;F:\Python\Scripts\;F:\Python\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\Xh0kat\AppData\Local\Microsoft\WindowsApps;C:\Users\Xh0kat\AppData\Local\GitHubDesktop\bin;F:\Tesseract;C:\Users\Xh0kat\AppData\Local\atom\bin;F:\Visual Studio Code\Microsoft VS Code\bin
+# environment
+COMMONPROGRAMW6432 = C:\Program Files\Common Files
+# environment
+PROCESSOR_ARCHITECTURE = x86
+# environment
+USERPROFILE = C:\Users\Xh0kat
+# environment
+ALLUSERSPROFILE = C:\ProgramData
+# makefile (from 'Makefile', line 10)
+AVRDUDE := "F:\Atmel Studio\AVR_dude\avrdude.exe" avrdude -C "F:\Atmel Studio\AVR_dude\avrdude.conf"
+# environment
+NUMBER_OF_PROCESSORS = 12
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync load
+# automatic
+%F = $(notdir $%)
+# environment
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_29428_OMSZRMRYAFNRMQZT
+# makefile (from 'Makefile', line 19)
+HFLAGS = -j .text -j .data -O ihex
+# environment
+COMPUTERNAME = DESKTOP-IEIN3IN
+# environment
+PROGRAMFILES = C:\Program Files (x86)
+# environment
+DRIVERDATA = C:\Windows\System32\Drivers\DriverData
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+USERNAME = Xh0kat
+# environment
+PUBLIC = C:\Users\Public
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+VSCODE_CODE_CACHE_PATH = C:\Users\Xh0kat\AppData\Roaming\Code\CachedData\3b889b090b5ad5793f524b5d1d39fda662b96a2a
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
+# environment
+LOGONSERVER = \\DESKTOP-IEIN3IN
+# environment
+ONEDRIVECONSUMER = C:\Users\Xh0kat\OneDrive
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+USERDOMAIN = DESKTOP-IEIN3IN
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# makefile (from 'Makefile', line 8)
+CC = avr-gcc
+# default
+MAKE_VERSION := 4.1
+# makefile
+.DEFAULT_GOAL := Burn
+# environment
+PROGRAMFILES(X86) = C:\Program Files (x86)
+# automatic
+%D = $(patsubst %/,%,$(patsubst %\,%,$(dir $%)))
+# makefile (from 'Makefile', line 16)
+LFLAGS = -Os -mmcu=atmega2560 -o
+# environment
+LOCALAPPDATA = C:\Users\Xh0kat\AppData\Local
+# environment
+PSMODULEPATH = C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+# default
+MAKE_COMMAND := make.exe
+# environment
+PROCESSOR_ARCHITEW6432 = AMD64
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+PROCESSOR_IDENTIFIER = AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+# environment
+OS = Windows_NT
+# environment
+VSCODE_IPC_HOOK = \\.\pipe\e5633fc0477cb670a8fa1a73e6fe315d-1.69.2-main-sock
+# environment
+HOMEPATH = \Users\Xh0kat
+# environment
+COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
+# environment
+PROMPT = $P$G
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(patsubst %\,%,$(dir $*)))
+# environment
+SYSTEMROOT = C:\WINDOWS
+# automatic
++D = $(patsubst %/,%,$(patsubst %\,%,$(dir $+)))
+# automatic
++F = $(notdir $+)
+# environment
+APPDATA = C:\Users\Xh0kat\AppData\Roaming
+# environment
+TEMP = C:\Users\Xh0kat\AppData\Local\Temp
+# environment
+AMDRMPATH = C:\Program Files\AMD\RyzenMaster\
+# environment
+COMSPEC = C:\WINDOWS\system32\cmd.exe
+# makefile (from 'Makefile', line 33)
+DUDEFLAGS = -c wiring -p m2560 -P  COM4 -D -b 115200 -U flash:w:$(MAIN_HEX_PATH):i
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LC_ALL = C
+# automatic
+^F = $(notdir $^)
+# makefile (from 'Makefile', line 9)
+OBJCOPY = avr-objcopy.exe
+# default
+SUFFIXES := 
+# environment
+SYSTEMDRIVE = C:
+# environment
+SESSIONNAME = Console
+# environment
+PROCESSOR_REVISION = 2100
+# default
+.INCLUDE_DIRS = .
+# default
+.RECIPEPREFIX := 
+# environment
+LANG = C
+# environment
+PROCESSOR_LEVEL = 25
+# environment
+VSCODE_PID = 29428
+# environment
+USERDOMAIN_ROAMINGPROFILE = DESKTOP-IEIN3IN
+# variable set hash-table stats:
+# Load=99/1024=10%, Rehash=0, Collisions=16/147=11%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (key f:/Visual Studio Code/AVR Projects/Test Project 1, mtime 1658002918): 8 files, no impossibilities.
+
+# 8 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-07-16 13:22:12
+#  File has been updated.
+#  Successfully updated.
+
+test.o: test.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 54):
+	$(CC) $^ $(INCLUDE) $(CFLAGS) $@
+
+Build: test.elf
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 48):
+	$(OBJCOPY) $(HFLAGS) $< $(MAIN_APP).hex
+
+test.elf: test.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 51):
+	$(CC) $(SRC) $(INCLUDE) $(LFLAGS) $@
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+Burn: Build
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 45):
+	$(AVRDUDE) $(DUDEFLAGS)
+
+# Not a target:
+test.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=9/1024=1%, Rehash=0, Collisions=0/26=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 13 / storage = 88 B / avg = 6 B
+# current buf: size = 8174 B / used = 88 B / count = 13 / avg = 6 B
+
+# strcache performance: lookups = 27 / hit rate = 51%
+# hash-table stats:
+# Load=13/8192=0%, Rehash=0, Collisions=1/27=4%
+# Finished Make data base on Mon Jul 18 21:24:32 2022
+
+ 
