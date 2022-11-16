@@ -8,6 +8,10 @@
 		},
 		{
 			"path": "../../../University Courses/Uvic/MECH 458 - Mechatronics/Labs/LCD_PortC_2560/LCD_PortC/Debug"
+		},
+		{
+			"name": "Music-LED-Sync",
+			"path": "Music-LED-Sync"
 		}
 	],
 	"settings": {

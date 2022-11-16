@@ -37,7 +37,6 @@ void captureInput(int16_t *buffer);
 int16_t capture[FFT_N]; /* Wave captureing buffer */ 
 complex_t bfly_buff[FFT_N]; /* FFT buffer */ 
 uint16_t spektrum[FFT_N/2]; /* Spectrum output buffer */
-uint16_t t1,t2,t3;
 
 char terminal_read[10];
 char done_FFT[10];
@@ -116,7 +115,7 @@ int main(int argc, char *argv[])
    uint16_t temp;            
    cli();
 
-  // ADCsetup();
+   ADCsetup();
 
    // UART communication setup
    UBRR0H = (BRC >> 8);
@@ -125,63 +124,51 @@ int main(int argc, char *argv[])
    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 
    sei();
-   //ADCSRA |= _BV(ADSC); // Start ADC conversion
+   ADCSRA |= _BV(ADSC); // Start ADC conversion
    
     while (1)
     {
-      //mTimer(2500);
+      mTimer(2500);
       //capture_wave(capture, FFT_N);
      // printf("%d",ADC_result);
     // printf('T');
-      //rawADCRead(ADC_result);
-      //captureInput(capture);
-   //    capture_wave(capture, FFT_N);
-   //   //rawADCRead(ADC_result);
-   // //  if (ADC_result_flag)
-   //   //{
-   //    //rawADCRead(ADC_result);  
-   //    //fft_input(testing_wav, bfly_buff);
-   //    fft_input(capture, bfly_buff);
-   //    fft_execute(bfly_buff);
-   //    fft_output(bfly_buff, spektrum);
-
-
-      capture_wave(capture, FFT_N);
-      TCNT1 = 0;	/* performance counter */
+      rawADCRead(ADC_result);
+      captureInput(capture);
+     //rawADCRead(ADC_result);
+   //  if (ADC_result_flag)
+     //{
+      //rawADCRead(ADC_result);  
+      //fft_input(testing_wav, bfly_buff);
       fft_input(capture, bfly_buff);
-      t1 = TCNT1; TCNT1 = 0;
       fft_execute(bfly_buff);
-      t2 = TCNT1; TCNT1 = 0;
       fft_output(bfly_buff, spektrum);
-      t3 = TCNT1;
       
       serialWrite("Start\n\r");
-      for (uint16_t i=0;i<FFT_N/2;i++)
-      {
-         temp = spektrum[i];
-         sprintf(terminal_read,"%u",temp);
-         serialWrite(terminal_read);
-         serialWrite(" ");
-       //  mTimer(250);   
-      }
+      // for (uint8_t i=0;i<FFT_N/2;i++)
+      // {
+      //    temp = spektrum[i];
+      //    sprintf(terminal_read,"%u",temp);
+      //    serialWrite(terminal_read);
+      //    serialWrite(",");
+      //  //  mTimer(250);   
+      // }
       serialWrite("\n\n");
       //rawADCRead(ADC_result);  
-      //ADC_result_flag = 0x00;
+      ADC_result_flag = 0x00;
       //sprintf(done_FFT, "%u",
       serialWrite("DONE\n\r");
-      mTimer(2500);
-      //ADCSRA |= _BV(ADSC); // Start another ADC conversion
+      ADCSRA |= _BV(ADSC); // Start another ADC conversion
      // mTimer(1000);
      }
  //   }
     return (0); 
 }
 
-// ISR(ADC_vect)
-// {
-//    ADC_result = ADCH;
-//    ADC_result_flag = 1;
-// }
+ISR(ADC_vect)
+{
+   ADC_result = ADCH;
+   ADC_result_flag = 1;
+}
 
 ISR(USART0_TX_vect)
 {
@@ -246,33 +233,18 @@ void captureInput(int16_t *buffer)
 }
 
 // Taken from other code
-// void capture_wave (int16_t *buffer, uint16_t count)
-// {
-//   //  ADMUX = _BV(REFS0)|_BV(ADLAR)| _BV(MUX0);;    // channel
-
-//     do {
-//         ADCSRA = _BV(ADEN)|_BV(ADSC)|_BV(ADATE)|_BV(ADIF)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0);
-//         while(bit_is_clear(ADCSRA, ADIF));
-//         *buffer++ = ADC - 32768;
-//     } while(--count);
-
-//     ADCSRA = 0;
-// }
-
-
 void capture_wave (int16_t *buffer, uint16_t count)
 {
-	ADMUX = _BV(REFS0)|_BV(ADLAR)|_BV(MUX0);	// channel
+    ADMUX = _BV(REFS0)|_BV(ADLAR);    // channel
 
-	do {
-		ADCSRA = _BV(ADEN)|_BV(ADSC) |_BV(ADIF)|_BV(ADPS2)|_BV(ADPS1);
-		while(bit_is_clear(ADCSRA, ADIF));
-		*buffer++ = ADC - 32768;
-	} while(--count);
+    do {
+        ADCSRA = _BV(ADEN)|_BV(ADSC)|_BV(ADATE)|_BV(ADIF)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0);
+        while(bit_is_clear(ADCSRA, ADIF));
+        *buffer++ = ADC - 32768;
+    } while(--count);
 
-	ADCSRA = 0;
+    ADCSRA = 0;
 }
-
 
 // void TransmitData( unsigned char data )
 // {
