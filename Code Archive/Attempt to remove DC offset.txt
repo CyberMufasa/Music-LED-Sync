@@ -1,11 +1,13 @@
 #define F_CPU 16000000
-//#define	SYSCLK		16000000
+#define	SYSCLK		16000000
 #define __AVR_ATmega2560__
 #ifndef __AVR_ATmega2560__
 #endif
 #define BUAD 9600
 #define BRC ((F_CPU/16/BUAD) - 1)
 #define TX_BUFFER_SIZE 256
+//#define FFT_N	64	// redefine for smaller samples
+#define PI 3.1415926535897932384626433832795
 #include <stdio.h>
 #include <stdlib.h> // the header of the general-purpose standard library of C programming language
 #include <avr/io.h> // the header of the I/O port library
@@ -14,6 +16,8 @@
 #include "lcd_test.h"
 #include "lcd.h"
 #include "ffft.h"
+//#include "test3.c"
+#include "1000hz_1.c"
 #include <avr/interrupt.h> // header for interrupts
 
 volatile unsigned int ADC_result;
@@ -118,6 +122,8 @@ int main(int argc, char *argv[])
    uint16_t temp, temp2, m, i;            
    cli();
 
+  // ADCsetup();
+
    // UART communication setup
    UBRR0H = (BRC >> 8);
    UBRR0L = BRC;
@@ -125,46 +131,135 @@ int main(int argc, char *argv[])
    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 
    sei();
+   //ADCSRA |= _BV(ADSC); // Start ADC conversion
+
+   //Create custom signal
+   //    int o,k;
+   // float f1=2.0,f2=5.0;  //the two input frequencies (bin values)
+
+   // for (o = 0 ; o < FFT_N ; o++) { // create samples
+
+   //    // amplitudes are 1000 for f1 and 500 for f2
+   //    k=1000.0*sin(2*PI*f1*o/FFT_N)+500.0*sin(2*PI*f2*o/FFT_N);
+
+   //    capture[2*o] = k; // put real data into even bins
+   //    capture[2*o+1] = 0; // set odd bins to 0
+   // }
    
     while (1)
     {
        
       capture_wave(capture, FFT_N);
 
+      // Remove DC offset
+     
+      //    for (i=0; i<FFT_N; i++) 
+      // {
+      //    temp = capture[i];
+      //   mTimer(10);
+      //    //sprintf(terminal_read,"%u",i);
+         
+        
+      //  //  serialWrite(terminal_read);
+      //   //serialWrite(terminal_read);
+      //  // serialWrite(":");
+      //   sprintf(terminal_read2,"%u",temp);
+      //   serialWrite(terminal_read2);
+      //    serialWrite(" ");
+        
+      // }
+      
+   //   mean += capture[i];
+     // mean=mean/FFT_N;
+
+//********************************************
+// Sample trying out
+// int mean = signal[0]; // signal is what you name capture...
+// for (i =1 ; i< sizeof(signal); i++) mean += signal[i];
+// mean=mean/sizeof(signal);
+// for (i=0; i<sizeof(signal); i++) signal[i]=signal[i] - mean;
+//********************************************
+
     int mean = capture[0]; 
+   // sprintf(terminal_readbefore,"%u",sizeof(capture));
+   // serialWrite(terminal_readbefore);
+   // serialWrite("\n\r");
+   // serialWrite("\n\r");
       for (i =1 ; i< FFT_N; i++)
       {
-         mean = capture[i];
-         mean += (mean/10000);
-         mTimer(10);
-         sprintf(terminal_readbefore,"%u",capture[i]);
-         serialWrite(terminal_readbefore);
-         serialWrite(" ");
+     mean += (capture[i]/1000);
+      //   sprintf(terminal_read2,"%u",mean);
+      //    serialWrite(terminal_read2);
+      mTimer(3);
+   //       sprintf(terminal_readbefore,"%u",capture[i]);
+   // serialWrite(terminal_readbefore);
+   // serialWrite(" ");
    
      }
   
-     mean=(mean/FFT_N)*10000;
+   //   mean=(mean/FFT_N)*1000;
+   //              sprintf(terminal_readmean,"%u",mean);
+   //       serialWrite(terminal_readmean);
+   //       serialWrite("\n\r");
       for (i =0 ; i<  FFT_N; i++)
       {
-         capture[i]=capture[i] - mean;
-      }
+     capture[i]=capture[i] - mean;
+           
+      //      mTimer(3);
+      //    sprintf(terminal_readafter,"%u",capture[i]);
+      // serialWrite(terminal_readafter);
+     }
 
+
+   //    TCNT1 = 0;	/* performance counter */
       fft_input(capture, bfly_buff);
       t1 = TCNT1; TCNT1 = 0;
       fft_execute(bfly_buff);
       t2 = TCNT1; TCNT1 = 0;
       fft_output(bfly_buff, spektrum);
       t3 = TCNT1;
+   //   // UDR0 = '*';
+   //   // serialWrite("Start");
+   //   // serialWrite('*');
       for (i=0;i<FFT_N/2;i++)
       {
+         //serialWrite("Start\n\r");
          temp = spektrum[i];
-         mTimer(10);
+         //temp /= 512;
+         mTimer(3);
+         //sprintf(terminal_read,"%u",i);
+         
+        
+       //  serialWrite(terminal_read);
+        //serialWrite(terminal_read);
+       // serialWrite(":");
+        sprintf(terminal_read2,"%u",temp);
+        serialWrite(terminal_read2);
+         //serialWrite("%5u ", temp);
+         serialWrite(" ");
+         
+   //    //    temp /= 512;
+	// 	// 	for (m = 0; m < temp; m++) UDR0 = '*';
+   //    //  //  mTimer(250);   
        }
       serialWrite("\n\r");
+      //rawADCRead(ADC_result);  
+      //ADC_result_flag = 0x00;
+      //sprintf(done_FFT, "%u",
       serialWrite("DONE\n\n\r");
+      mTimer(500);
+      //ADCSRA |= _BV(ADSC); // Start another ADC conversion
+     // mTimer(1000);
      }
+ //   }
     return (0); 
 }
+
+// ISR(ADC_vect)
+// {
+//    ADC_result = ADCH;
+//    ADC_result_flag = 1;
+// }
 
 ISR(USART0_TX_vect)
 {
@@ -228,6 +323,21 @@ void captureInput(int16_t *buffer)
    }
 }
 
+// Taken from other code
+// void capture_wave (int16_t *buffer, uint16_t count)
+// {
+//   //  ADMUX = _BV(REFS0)|_BV(ADLAR)| _BV(MUX0);;    // channel
+
+//     do {
+//         ADCSRA = _BV(ADEN)|_BV(ADSC)|_BV(ADATE)|_BV(ADIF)|_BV(ADPS2)|_BV(ADPS1)|_BV(ADPS0);
+//         while(bit_is_clear(ADCSRA, ADIF));
+//         *buffer++ = ADC - 32768;
+//     } while(--count);
+
+//     ADCSRA = 0;
+// }
+
+
 void capture_wave (int16_t *buffer, uint16_t count)
 {
    // REFS0 - AVCC with external reference
@@ -240,11 +350,11 @@ void capture_wave (int16_t *buffer, uint16_t count)
       // ADSC - Start ADC conversion
       // ADIF - ADC Interrupt flag, set when ADC completes, cleared by interrupt vector
       // ADPS2 & ADPS1 - 64 division factor 
-		ADCSRA = _BV(ADEN)|_BV(ADSC) |_BV(ADIF)|_BV(ADPS2)|_BV(ADPS1);//|_BV(ADPS0);
+		ADCSRA = _BV(ADEN)|_BV(ADSC) |_BV(ADIF)|_BV(ADPS2)|_BV(ADPS1);
      // ADCSRB = ~_BV(ADTS2)| ~_BV(ADTS1)| ~_BV(ADTS0);
 		while(bit_is_clear(ADCSRA, ADIF)); // Loop in place while no ADC read is happening
      // ADC = ADC - 512;
-		*buffer++ = ADC - 32768; 
+		*buffer++ = ADC - 32768; // Subtract integer datatype value
       //*buffer++ = ADC; // Subtract integer datatype value
 	} while(--count);
 
