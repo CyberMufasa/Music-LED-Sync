@@ -137,12 +137,12 @@ int main(int argc, char *argv[])
          mean = capture[i];
          mean += (mean/10000);
          mTimer(10);
-         sprintf(terminal_readbefore,"%u",capture[i]);
-         serialWrite(terminal_readbefore);
-         serialWrite(" ");
+        // sprintf(terminal_readbefore,"%u",capture[i]);
+       //  serialWrite(terminal_readbefore);
+       //  serialWrite(" ");
    
      }
-  
+      serialWrite("Start\n\r");
      mean=(mean/FFT_N)*10000;
       for (i =0 ; i<  FFT_N; i++)
       {
@@ -155,10 +155,28 @@ int main(int argc, char *argv[])
       t2 = TCNT1; TCNT1 = 0;
       fft_output(bfly_buff, spektrum);
       t3 = TCNT1;
+
       for (i=0;i<FFT_N/2;i++)
       {
+
+
          temp = spektrum[i];
          mTimer(10);
+        sprintf(terminal_read2,"%u",i);
+        serialWrite(terminal_read2);
+      // serialWrite(i);
+        // UDR0 = i;
+         serialWrite(":");
+         
+         sprintf(terminal_read,"%u",temp);
+         serialWrite(terminal_read);
+      //serialWrite("%5u ", temp);
+         serialWrite(" ");
+         
+      //    temp /= 512;
+		// 	for (m = 0; m < temp; m++) UDR0 = '*';
+      //  //  mTimer(250);  
+
        }
       serialWrite("\n\r");
       serialWrite("DONE\n\n\r");
