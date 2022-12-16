@@ -33,7 +33,6 @@ void capture_wave (int16_t *buffer, uint16_t count);
 void captureInput(int16_t *buffer);
 void set_frequncy(void);
 void UART_display(char *display, int16_t input);
-uint16_t *max_freq_val(uint16_t *input);
 
 int16_t capture[FFT_N]; /* Wave captureing buffer */ 
 complex_t bfly_buff[FFT_N]; /* FFT buffer */ 
@@ -45,10 +44,6 @@ char terminal_read2[16];
 char terminal_readmean[16];
 char terminal_readbefore[16];
 char terminal_readafter[16];
-char terminal_MaxFreq[16];
-uint16_t *array_MaxFreq;
-char terminal_Maxindex[16];
-char terminal_debug[16];
 char done_FFT[10];
 
 #define ADCpin1 0x61
@@ -122,7 +117,7 @@ void serialWrite(char c[])
 int main(int argc, char *argv[])
 { 
 
-   uint16_t temp, temp2, m, i, max_freq;           
+   uint16_t temp, temp2, m, i;           
 
    DDRF = 0b00000010;	/* PE1:<conout>, PE0:<conin> in N81 38.4kbps */
 	TCCR1B = 3;	/* clk/64 */
@@ -155,7 +150,6 @@ int main(int argc, char *argv[])
          UART_display(terminal_readbefore, capture[i]);
    
      }
-      serialWrite("\n\r");
       serialWrite("Start\n\r");
      mean=(mean/FFT_N)*10000;
       for (i =0 ; i<  FFT_N; i++)
@@ -187,23 +181,11 @@ int main(int argc, char *argv[])
       //serialWrite("%5u ", temp);
          serialWrite(" ");
          
-         
       //    temp /= 512;
 		// 	for (m = 0; m < temp; m++) UDR0 = '*';
       //  //  mTimer(250);  
 
        }
-       
-       array_MaxFreq = max_freq_val(spektrum);
-       serialWrite("\n\n\rMax Freq 1: ");
-       UART_display(terminal_MaxFreq,spektrum[array_MaxFreq[0]]);
-       serialWrite("\n\rMax index 1: ");
-       UART_display(terminal_Maxindex,array_MaxFreq[0]);
-              serialWrite("\n\n\rMax Freq 2: ");
-       UART_display(terminal_MaxFreq,spektrum[array_MaxFreq[1]]);
-       serialWrite("\n\rMax index 2: ");
-       UART_display(terminal_Maxindex,array_MaxFreq[1]);
-
       serialWrite("\n\r");
       serialWrite("DONE\n\n\r");
      }
@@ -325,40 +307,4 @@ void UART_display(char *display, int16_t input)
    sprintf(display,"%u",input);
    serialWrite(display);
    serialWrite(" ");
-}
-
-uint16_t *max_freq_val(uint16_t *input)
-{
-   /*TODO:
-   This function does not go back to check previous entries
-   */  
-   
-   uint16_t max_val1 = input[2]; // Skip bins 0 and 1
-   uint16_t max_val2 = 0; // Skip bins 0 and 1
-   uint16_t max_val3 = 0; // Skip bins 0 and 1
-   uint16_t max_index1 = 2; 
-   uint16_t max_index2 = 2; 
-   uint16_t max_index3 = 2; 
-   uint16_t *maxindex = malloc(2); // Must keep memory when done with loop
-
-   // Iterate full array
-   for (int i = 2; i < FFT_N/2; i++)
-   {
-      if (max_val1 < input[i])
-      {
-         max_val2 = max_val1; // Replace second highest value with old max value 
-         max_index2 = max_index1;
-         max_val1 = input[i];
-         max_index1 = i;
-         
-      }
-      else if (max_val2 < input[i])
-      {
-         max_val2 = input[i];
-         max_index2 = i;
-      }
-   }
-   maxindex[0] = max_index1;
-   maxindex[1] = max_index2;
-   return maxindex;
 }
