@@ -34,7 +34,6 @@ void captureInput(int16_t *buffer);
 void set_frequncy(void);
 void UART_display(char *display, int16_t input);
 uint16_t *max_freq_val(uint16_t *input);
-void turn_on_LED(uint16_t freq_bin);
 
 int16_t capture[FFT_N]; /* Wave captureing buffer */ 
 complex_t bfly_buff[FFT_N]; /* FFT buffer */ 
@@ -125,14 +124,8 @@ int main(int argc, char *argv[])
 
    uint16_t temp, temp2, m, i, max_freq;           
 
-   //DDRF = 0b00000010;	/* PE1:<conout>, PE0:<conin> in N81 38.4kbps */
-   DDRF = 0b11111101;
+   DDRF = 0b00000010;	/* PE1:<conout>, PE0:<conin> in N81 38.4kbps */
 	TCCR1B = 3;	/* clk/64 */
-
-   // Turn LEDs on as test
-   DDRC = 0b00001110;
-   PORTC = 0b00000000;
-   // PORTC = 0b0000(Red LED)(Green LED)(Blue LED)0;
 
    cli();
 
@@ -212,11 +205,7 @@ int main(int argc, char *argv[])
        UART_display(terminal_Maxindex,array_MaxFreq[1]);
 
       serialWrite("\n\r");
-      turn_on_LED(array_MaxFreq[0]);
-       
-      serialWrite("\n\r");
       serialWrite("DONE\n\n\r");
-      mTimer(500);
      }
     return (0); 
 }
@@ -299,7 +288,7 @@ void capture_wave (int16_t *buffer, uint16_t count)
      // ADCSRB = ~_BV(ADTS2)| ~_BV(ADTS1)| ~_BV(ADTS0);
 		while(bit_is_clear(ADCSRA, ADIF)); // Loop in place while no ADC read is happening
      // ADC = ADC - 512;
-		//*buffer++ = ADCH - 32768; 
+		//*buffer++ = ADC - 32768; 
       //*buffer++ = ADCH - 65536;
       *buffer++ = ADCH;
       
@@ -328,26 +317,6 @@ void set_frequency(int16_t *input)
         sprintf(frequency,"%u","");
         serialWrite(frequency);
         serialWrite("High");
-   }
-}
-
-void turn_on_LED(uint16_t freq_bin)
-{
-   if (freq_bin < 10)
-   {
-     serialWrite("LOW freq");
-     PORTC = 0b00001000;
-   }
-   else if (freq_bin > 9 && freq_bin < 20)
-   {
-   serialWrite("Mid freq");
-   PORTC = 0b00000100;
-   }
-  
-   else
-   {
-   serialWrite("High freq");
-   PORTC = 0b00000010;
    }
 }
 
