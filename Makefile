@@ -133,10 +133,10 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 # Default target.
-all: program
+all: program clean
 
 build: elf hex eep
-	$(info build loop)
+
 
 elf: $(TARGET).elf
 hex: $(TARGET).hex
@@ -146,10 +146,8 @@ sym: $(TARGET).sym
 
 
 # Program the device.  
-program: $(TARGET).hex $(TARGET).eep
-	$(info program loop) $(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
-
-
+program: $(TARGET).hex
+	 $(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) 
 
 
 # Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
@@ -208,7 +206,7 @@ $(TARGET).elf: $(OBJ)
 
 # Target: clean project.
 clean:
-	$(info clean loop) $(REMOVE) $(TARGET).hex $(TARGET).eep $(TARGET).cof $(TARGET).elf \
+	$(REMOVE) $(TARGET).hex $(TARGET).eep $(TARGET).cof $(TARGET).elf \
 	$(TARGET).map $(TARGET).sym $(TARGET).lss \
 	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d)
 
