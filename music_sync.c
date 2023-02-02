@@ -329,7 +329,7 @@ uint16_t *max_freq_val(uint16_t *input)
    /*TODO:
    If a new value matches an existing value check the previous FFT array. If one of the new bins is a peak bin
    from a previous sample, assume that that same bin (frequency) is dominant and use it over the other bin.
-   If they both were present in the old sampled FFT, then assume both are dominant frequnecies.
+   If they both were present in the old sampled FFT, then assume both are dominant frequencies.
    */
 
    uint16_t max_val1 = input[2]; // Skip bins 0 and 1
