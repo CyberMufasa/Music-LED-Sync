@@ -8,7 +8,7 @@
 
 MCU = atmega2560
 FORMAT = ihex
-TARGET = test
+TARGET = music_sync
 SRC = $(TARGET).c 
 SRC += LCD.c
 SRC += lcd_test.c
