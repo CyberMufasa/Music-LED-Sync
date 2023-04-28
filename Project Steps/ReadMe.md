@@ -16,7 +16,7 @@ There is also a hardware task to find led strips to illuminate that can be nicel
 the amplifier design and get the proper input connector for audio. This should be some 1/4" input so that  a guitar can be connected. Besides that, minor fine
 tuning of the samples and general software improvement would be done and project should be satisfactorily completed.
 
-Project next steps:
+## Project next steps:
 - Log bin values to output file as signals are being read in
 - Use values to plot the frequency spectrum maybe in python
 - Research hardware required to expand from single LEDs to LED strips
