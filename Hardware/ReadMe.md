@@ -15,3 +15,7 @@
 <p align="center">
 <img src= "../Photos/Physical_Circuit.png">
 </p>
+
+Video demo of project located in Photos folder.
+
+
